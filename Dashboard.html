@@ -1,0 +1,307 @@
+﻿<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Saúde Bucal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 p-4 sm:p-8">
+    
+    <nav class="bg-white shadow-md rounded-lg mb-8 max-w-7xl mx-auto">
+        <div class="mx-auto px-4">
+            <div class="flex justify-center h-16">
+                <div class="flex items-center">
+                    <div class="flex items-baseline space-x-4">
+                        <a href="index.html" class="bg-indigo-100 text-indigo-700 px-3 py-2 rounded-md text-sm font-medium" aria-current="page">Home</a>
+                            <a href="dashboard.html" class="text-gray-700 hover:bg-gray-200 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Index</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="max-w-7xl mx-auto">
+        <header class="mb-8">
+            <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 text-center">Dashboard de Saúde Bucal</h1>
+            <p class="text-center text-gray-500 mt-2">Análise dos dados coletados.</p>
+        </header>
+
+        <!-- Filtros -->
+        <div class="bg-white p-6 rounded-lg shadow-md mb-8 flex flex-col sm:flex-row items-center gap-4 flex-wrap">
+            <div class="w-full sm:flex-1">
+                <label for="school-select" class="block text-sm font-medium text-gray-700">Filtrar por Escola</label>
+                <select id="school-select" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                    <option value="">Carregando...</option>
+                </select>
+            </div>
+             <div class="w-full sm:flex-1">
+                <label for="dentist-select" class="block text-sm font-medium text-gray-700">Filtrar por Dentista</label>
+                <select id="dentist-select" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                     <option value="">Carregando...</option>
+                </select>
+            </div>
+             <div class="w-full sm:flex-1">
+                <label for="health-unit-select" class="block text-sm font-medium text-gray-700">Filtrar por Unidade de Saúde</label>
+                <select id="health-unit-select" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                     <option value="">Carregando...</option>
+                </select>
+            </div>
+            <button id="filter-btn" class="w-full sm:w-auto mt-4 sm:mt-0 self-end bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg shadow-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-transform transform hover:scale-105">
+                Aplicar Filtros
+            </button>
+        </div>
+
+        <!-- Resultados -->
+        <div id="results-container" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <!-- Card Crianças Avaliadas -->
+            <div class="bg-white p-6 rounded-lg shadow-md flex items-center">
+                <div class="bg-blue-100 p-4 rounded-full">
+                    <i class="fas fa-child fa-2x text-blue-500"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-gray-500">Crianças Avaliadas</p>
+                    <p id="evaluated-children" class="text-3xl font-bold text-gray-800">0</p>
+                </div>
+            </div>
+            <!-- Card Dentes Permanentes -->
+            <div class="bg-white p-6 rounded-lg shadow-md flex items-center">
+                <div class="bg-green-100 p-4 rounded-full">
+                     <i class="fas fa-tooth fa-2x text-green-500"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-gray-500">Dentes Perm. Avaliados</p>
+                    <p id="permanent-teeth" class="text-3xl font-bold text-gray-800">0</p>
+                </div>
+            </div>
+             <!-- Card Dentes Decíduos -->
+            <div class="bg-white p-6 rounded-lg shadow-md flex items-center">
+                <div class="bg-yellow-100 p-4 rounded-full">
+                     <i class="fas fa-baby fa-2x text-yellow-500"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-gray-500">Dentes Dec. Avaliados</p>
+                    <p id="deciduous-teeth" class="text-3xl font-bold text-gray-800">0</p>
+                </div>
+            </div>
+            <!-- Card Média CPO-D -->
+            <div class="bg-white p-6 rounded-lg shadow-md flex items-center">
+                <div class="bg-red-100 p-4 rounded-full">
+                     <i class="fas fa-chart-bar fa-2x text-red-500"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-gray-500">Média CPO-D</p>
+                    <p id="cpod-average" class="text-3xl font-bold text-gray-800">0.0</p>
+                </div>
+            </div>
+             <!-- Card Média ceo-d -->
+            <div class="bg-white p-6 rounded-lg shadow-md flex items-center lg:col-start-2">
+                <div class="bg-purple-100 p-4 rounded-full">
+                     <i class="fas fa-chart-pie fa-2x text-purple-500"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-gray-500">Média ceo-d</p>
+                    <p id="ceod-average" class="text-3xl font-bold text-gray-800">0.0</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Detalhes por status do dente -->
+        <div id="details-container" class="hidden mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Card Dentes Permanentes Detalhes -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h3 class="text-xl font-bold text-gray-800 mb-4">Dentes Permanentes (Status)</h3>
+                <ul id="permanent-details" class="space-y-2 text-gray-600">
+                    <!-- JS will populate this -->
+                </ul>
+            </div>
+            <!-- Card Dentes Decíduos Detalhes -->
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                 <h3 class="text-xl font-bold text-gray-800 mb-4">Dentes Decíduos (Status)</h3>
+                <ul id="deciduous-details" class="space-y-2 text-gray-600">
+                    <!-- JS will populate this -->
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCQ6-j_XnXirciqXe1-Me_fPErfWatRgpo",
+            authDomain: "cpod-f415e.firebaseapp.com",
+            projectId: "cpod-f415e",
+            storageBucket: "cpod-f415e.appspot.com",
+            messagingSenderId: "1074454483835",
+            appId: "1:1074454483835:web:43e95d040e885d293363de",
+            measurementId: "G-PM5E4T0ZYC"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        const schoolSelect = document.getElementById('school-select');
+        const dentistSelect = document.getElementById('dentist-select');
+        const healthUnitSelect = document.getElementById('health-unit-select');
+        const filterBtn = document.getElementById('filter-btn');
+        const resultsContainer = document.getElementById('results-container');
+        const detailsContainer = document.getElementById('details-container');
+
+        const permanentStatusMap = {
+            '0': 'Sadio', '1': 'Cariado', '2': 'Restaurado, com cárie', '3': 'Restaurado, sem cárie',
+            '4': 'Extraído (cárie)', '5': 'Extraído (outra razão)', '6': 'Selante', '7': 'Ponte ou coroa',
+            '8': 'Não erupcionado', '9': 'Excluído'
+        };
+        const deciduousStatusMap = {
+            'A': 'Sadio', 'B': 'Cariado', 'C': 'Restaurado, com cárie', 'D': 'Restaurado, sem cárie',
+            'E': 'Extraído (cárie)', 'F': 'Selante', 'G': 'Ponte ou coroa'
+        };
+
+        async function loadFilters() {
+            try {
+                await signInAnonymously(auth);
+                const [avaliacoesSnapshot, escolasSnapshot] = await Promise.all([
+                    getDocs(collection(db, "avaliacoes")),
+                    getDocs(collection(db, "escolas"))
+                ]);
+
+                const schools = new Set();
+                const dentists = new Set();
+                const healthUnits = new Map();
+
+                avaliacoesSnapshot.forEach(doc => {
+                    const data = doc.data();
+                    if (data.escola) schools.add(data.escola);
+                    if (data.dentista) dentists.add(data.dentista);
+                });
+
+                escolasSnapshot.forEach(doc => {
+                    const data = doc.data();
+                    if(data.unidadeSaude) healthUnits.set(data.unidadeSaude, true);
+                });
+
+                // Populate School Select
+                schoolSelect.innerHTML = '<option value="">Consolidado Geral</option>';
+                [...schools].sort().forEach(school => {
+                    schoolSelect.innerHTML += `<option value="${school}">${school}</option>`;
+                });
+                
+                // Populate Dentist Select
+                dentistSelect.innerHTML = '<option value="">Todos os Dentistas</option>';
+                [...dentists].sort().forEach(dentist => {
+                    dentistSelect.innerHTML += `<option value="${dentist}">${dentist}</option>`;
+                });
+                
+                // Populate Health Unit Select
+                healthUnitSelect.innerHTML = '<option value="">Todas as Unidades</option>';
+                [...healthUnits.keys()].sort().forEach(unit => {
+                    healthUnitSelect.innerHTML += `<option value="${unit}">${unit}</option>`;
+                });
+
+            } catch (error) {
+                console.error("Error loading filters: ", error);
+            }
+        }
+
+        async function calculateMetrics() {
+            const selectedSchool = schoolSelect.value;
+            const selectedDentist = dentistSelect.value;
+            const selectedHealthUnit = healthUnitSelect.value;
+            
+            let constraints = [];
+
+            if(selectedSchool) constraints.push(where("escola", "==", selectedSchool));
+            if(selectedDentist) constraints.push(where("dentista", "==", selectedDentist));
+            
+            // If a health unit is selected, we need to find which schools belong to it
+            if (selectedHealthUnit) {
+                 const schoolsInUnit = [];
+                 const schoolsQuery = query(collection(db, "escolas"), where("unidadeSaude", "==", selectedHealthUnit));
+                 const schoolsSnapshot = await getDocs(schoolsQuery);
+                 schoolsSnapshot.forEach(doc => schoolsInUnit.push(doc.data().nome));
+
+                 if(schoolsInUnit.length > 0){
+                    constraints.push(where("escola", "in", schoolsInUnit));
+                 } else { // No schools for this unit, so no results
+                    constraints.push(where("escola", "==", "")); // Impossible condition to return no results
+                 }
+            }
+            
+            const q = query(collection(db, "avaliacoes"), ...constraints);
+            const querySnapshot = await getDocs(q);
+
+            let childCount = 0, permanentTeethCount = 0, deciduousTeethCount = 0, totalCPOD = 0, totalCEOD = 0;
+            const permanentCounts = Object.fromEntries(Object.keys(permanentStatusMap).map(key => [key, 0]));
+            const deciduousCounts = Object.fromEntries(Object.keys(deciduousStatusMap).map(key => [key, 0]));
+            
+            const cpodConditionCodes = ['1', '2', '4', '3'];
+            const ceodConditionCodes = ['B', 'C', 'E', 'D'];
+
+            querySnapshot.forEach(doc => {
+                childCount++;
+                const { odontograma = {} } = doc.data();
+                
+                let cpodIndividual = 0, ceodIndividual = 0;
+
+                for (const tooth in odontograma) {
+                    const state = odontograma[tooth].toUpperCase();
+                    const toothNum = parseInt(tooth, 10);
+
+                    if (permanentCounts.hasOwnProperty(state)) {
+                        permanentCounts[state]++;
+                    } else if (deciduousCounts.hasOwnProperty(state)) {
+                        deciduousCounts[state]++;
+                    }
+                    
+                    if ((toothNum >= 11 && toothNum <= 48)) {
+                        permanentTeethCount++;
+                        if (cpodConditionCodes.includes(state)) cpodIndividual++;
+                    } else if ((toothNum >= 51 && toothNum <= 85)) {
+                        deciduousTeethCount++;
+                        if (ceodConditionCodes.includes(state)) ceodIndividual++;
+                    }
+                }
+                totalCPOD += cpodIndividual;
+                totalCEOD += ceodIndividual;
+            });
+            
+            const avgCPOD = childCount > 0 ? (totalCPOD / childCount).toFixed(1) : '0.0';
+            const avgCEOD = childCount > 0 ? (totalCEOD / childCount).toFixed(1) : '0.0';
+
+            // Update UI
+            document.getElementById('evaluated-children').textContent = childCount;
+            document.getElementById('permanent-teeth').textContent = permanentTeethCount;
+            document.getElementById('deciduous-teeth').textContent = deciduousTeethCount;
+            document.getElementById('cpod-average').textContent = avgCPOD;
+            document.getElementById('ceod-average').textContent = avgCEOD;
+            
+            const permanentDetailsUl = document.getElementById('permanent-details');
+            permanentDetailsUl.innerHTML = '';
+            for(const code in permanentCounts){
+                 permanentDetailsUl.innerHTML += `<li class="flex justify-between"><span>${permanentStatusMap[code]} (${code})</span> <span class="font-bold">${permanentCounts[code]}</span></li>`;
+            }
+
+            const deciduousDetailsUl = document.getElementById('deciduous-details');
+            deciduousDetailsUl.innerHTML = '';
+            for(const code in deciduousCounts){
+                 deciduousDetailsUl.innerHTML += `<li class="flex justify-between"><span>${deciduousStatusMap[code]} (${code})</span> <span class="font-bold">${deciduousCounts[code]}</span></li>`;
+            }
+
+            resultsContainer.classList.remove('hidden');
+            detailsContainer.classList.remove('hidden');
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', loadFilters);
+        filterBtn.addEventListener('click', calculateMetrics);
+
+    </script>
+</body>
+</html>
+
