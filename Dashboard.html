@@ -1,306 +1,516 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard de Saúde Bucal</title>
+    <title>Formulário de Avaliação Odontológica</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Estilos otimizados para mobile */
+        .tooth-input {
+            width: 3rem; /* Tamanho maior para facilitar o toque */
+            height: 3rem;
+            text-align: center;
+            border: 1px solid #D1D5DB;
+            border-radius: 0.375rem;
+            font-size: 1rem; /* Fonte maior */
+            -webkit-appearance: none; /* Remove estilos padrão do iOS */
+        }
+        .tooth-label {
+            font-size: 0.875rem; /* Fonte do número do dente aumentada */
+            color: #4B5563;
+        }
+        .odontogram-grid {
+            display: grid;
+            grid-template-columns: repeat(16, minmax(0, 1fr));
+            gap: 4px; /* Espaçamento aumentado */
+            justify-content: center;
+        }
+        .tooth-cell {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 5rem;
+        }
+        #success-message {
+            display: none;
+            transition: opacity 0.5s ease-in-out;
+        }
+        /* Estilos para o Modal */
+        .modal-overlay {
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+    </style>
 </head>
-<body class="bg-gray-100 p-4 sm:p-8">
-    
-    <nav class="bg-white shadow-md rounded-lg mb-8 max-w-7xl mx-auto">
-        <div class="mx-auto px-4">
-            <div class="flex justify-center h-16">
-                <div class="flex items-center">
-                    <div class="flex items-baseline space-x-4">
-                        <a href="index.html" class="bg-indigo-100 text-indigo-700 px-3 py-2 rounded-md text-sm font-medium" aria-current="page">Home</a>
+<body class="bg-gray-100">
+
+    <div class="min-h-screen p-2 sm:p-4">
+        <nav class="bg-white shadow-md rounded-lg mb-8 max-w-4xl mx-auto">
+            <div class="mx-auto px-4">
+                <div class="flex justify-center h-16">
+                    <div class="flex items-center">
+                        <div class="flex items-baseline space-x-4">
+                            <a href="formulario_odontologico.html" class="bg-indigo-100 text-indigo-700 px-3 py-2 rounded-md text-sm font-medium" aria-current="page">Home</a>
                             <a href="dashboard.html" class="text-gray-700 hover:bg-gray-200 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">Index</a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </nav>
+        </nav>
 
-    <div class="max-w-7xl mx-auto">
-        <header class="mb-8">
-            <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 text-center">Dashboard de Saúde Bucal</h1>
-            <p class="text-center text-gray-500 mt-2">Análise dos dados coletados.</p>
-        </header>
+        <form id="evaluation-form" class="w-full max-w-4xl bg-white p-4 sm:p-8 rounded-lg shadow-md mx-auto">
+            <h1 class="text-2xl sm:text-3xl font-bold text-center text-gray-700 mb-6">Formulário de Avaliação Odontológica</h1>
 
-        <!-- Filtros -->
-        <div class="bg-white p-6 rounded-lg shadow-md mb-8 flex flex-col sm:flex-row items-center gap-4 flex-wrap">
-            <div class="w-full sm:flex-1">
-                <label for="school-select" class="block text-sm font-medium text-gray-700">Filtrar por Escola</label>
-                <select id="school-select" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                    <option value="">Carregando...</option>
-                </select>
-            </div>
-             <div class="w-full sm:flex-1">
-                <label for="dentist-select" class="block text-sm font-medium text-gray-700">Filtrar por Dentista</label>
-                <select id="dentist-select" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                     <option value="">Carregando...</option>
-                </select>
-            </div>
-             <div class="w-full sm:flex-1">
-                <label for="health-unit-select" class="block text-sm font-medium text-gray-700">Filtrar por Unidade de Saúde</label>
-                <select id="health-unit-select" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                     <option value="">Carregando...</option>
-                </select>
-            </div>
-            <button id="filter-btn" class="w-full sm:w-auto mt-4 sm:mt-0 self-end bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg shadow-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-transform transform hover:scale-105">
-                Aplicar Filtros
-            </button>
-        </div>
+            <!-- Seção de Identificação -->
+            <fieldset class="border-t border-gray-200 pt-6">
+                <legend class="text-lg font-semibold text-gray-800 mb-4">Identificação</legend>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label for="dentista" class="block text-sm font-medium text-gray-700">Dentista Avaliador</label>
+                        <div class="flex items-center gap-2 mt-1">
+                            <select id="dentista" name="dentista" class="text-lg block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                               <option>Carregando...</option>
+                            </select>
+                            <button type="button" id="add-dentist-btn" class="bg-gray-200 text-gray-700 font-bold py-2 px-4 rounded-lg hover:bg-gray-300 focus:outline-none">...</button>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="data" class="block text-sm font-medium text-gray-700">Data</label>
+                        <input type="text" id="data" name="data" readonly class="mt-1 text-lg block w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md shadow-sm">
+                    </div>
+                    <div>
+                        <label for="nome" class="block text-sm font-medium text-gray-700">Nome da Criança</label>
+                        <input type="text" id="nome" name="nome" class="mt-1 text-lg block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+                    <div>
+                        <label for="nascimento" class="block text-sm font-medium text-gray-700">Data de Nascimento</label>
+                        <input type="date" id="nascimento" name="nascimento" class="mt-1 text-lg block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+                     <div>
+                        <label for="idade" class="block text-sm font-medium text-gray-700">Idade (automático)</label>
+                        <input type="number" id="idade" name="idade" readonly class="mt-1 text-lg block w-full px-3 py-2 bg-gray-100 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Gênero</label>
+                        <div class="mt-2 flex items-center space-x-6">
+                            <label class="inline-flex items-center text-lg">
+                                <input type="radio" name="genero" value="masculino" class="h-5 w-5 text-indigo-600">
+                                <span class="ml-2">Masculino</span>
+                            </label>
+                            <label class="inline-flex items-center text-lg">
+                                <input type="radio" name="genero" value="feminino" class="h-5 w-5 text-indigo-600">
+                                <span class="ml-2">Feminino</span>
+                            </label>
+                        </div>
+                    </div>
+                     <div class="md:col-span-2">
+                        <label for="escola" class="block text-sm font-medium text-gray-700">Escola</label>
+                        <div class="flex items-center gap-2 mt-1">
+                            <select id="escola" name="escola" class="text-lg block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                               <option>Carregando...</option>
+                            </select>
+                             <button type="button" id="add-school-btn" class="bg-gray-200 text-gray-700 font-bold py-2 px-4 rounded-lg hover:bg-gray-300 focus:outline-none">...</button>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
 
-        <!-- Resultados -->
-        <div id="results-container" class="hidden grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <!-- Card Crianças Avaliadas -->
-            <div class="bg-white p-6 rounded-lg shadow-md flex items-center">
-                <div class="bg-blue-100 p-4 rounded-full">
-                    <i class="fas fa-child fa-2x text-blue-500"></i>
-                </div>
-                <div class="ml-4">
-                    <p class="text-gray-500">Crianças Avaliadas</p>
-                    <p id="evaluated-children" class="text-3xl font-bold text-gray-800">0</p>
-                </div>
-            </div>
-            <!-- Card Dentes Permanentes -->
-            <div class="bg-white p-6 rounded-lg shadow-md flex items-center">
-                <div class="bg-green-100 p-4 rounded-full">
-                     <i class="fas fa-tooth fa-2x text-green-500"></i>
-                </div>
-                <div class="ml-4">
-                    <p class="text-gray-500">Dentes Perm. Avaliados</p>
-                    <p id="permanent-teeth" class="text-3xl font-bold text-gray-800">0</p>
-                </div>
-            </div>
-             <!-- Card Dentes Decíduos -->
-            <div class="bg-white p-6 rounded-lg shadow-md flex items-center">
-                <div class="bg-yellow-100 p-4 rounded-full">
-                     <i class="fas fa-baby fa-2x text-yellow-500"></i>
-                </div>
-                <div class="ml-4">
-                    <p class="text-gray-500">Dentes Dec. Avaliados</p>
-                    <p id="deciduous-teeth" class="text-3xl font-bold text-gray-800">0</p>
-                </div>
-            </div>
-            <!-- Card Média CPO-D -->
-            <div class="bg-white p-6 rounded-lg shadow-md flex items-center">
-                <div class="bg-red-100 p-4 rounded-full">
-                     <i class="fas fa-chart-bar fa-2x text-red-500"></i>
-                </div>
-                <div class="ml-4">
-                    <p class="text-gray-500">Média CPO-D</p>
-                    <p id="cpod-average" class="text-3xl font-bold text-gray-800">0.0</p>
-                </div>
-            </div>
-             <!-- Card Média ceo-d -->
-            <div class="bg-white p-6 rounded-lg shadow-md flex items-center lg:col-start-2">
-                <div class="bg-purple-100 p-4 rounded-full">
-                     <i class="fas fa-chart-pie fa-2x text-purple-500"></i>
-                </div>
-                <div class="ml-4">
-                    <p class="text-gray-500">Média ceo-d</p>
-                    <p id="ceod-average" class="text-3xl font-bold text-gray-800">0.0</p>
-                </div>
-            </div>
-        </div>
+            <!-- Seção CPO-D/ceo-d -->
+            <fieldset class="border-t border-gray-200 mt-8 pt-6">
+                <legend class="text-lg font-semibold text-gray-800 mb-4">1. CPO-D/ceo-d</legend>
+                
+                <div class="odontogram-container overflow-x-auto pb-4">
+                    <div class="odontogram-grid min-w-[700px]">
+                        <!-- Linha Superior (Dentes 18 a 28) -->
+                        <div class="tooth-cell"><span class="tooth-label">18</span><input type="text" data-tooth="18" class="tooth-input"></div>
+                        <div class="tooth-cell"><span class="tooth-label">17</span><input type="text" data-tooth="17" class="tooth-input"></div>
+                        <div class="tooth-cell"><span class="tooth-label">16</span><input type="text" data-tooth="16" class="tooth-input"></div>
+                        <div class="tooth-cell"><span class="tooth-label">15</span><input type="text" data-tooth="15" class="tooth-input"></div>
+                        <div class="tooth-cell"><span class="tooth-label">14</span><input type="text" data-tooth="14" class="tooth-input"></div>
+                        <div class="tooth-cell"><span class="tooth-label">13</span><input type="text" data-tooth="13" class="tooth-input"></div>
+                        <div class="tooth-cell"><span class="tooth-label">12</span><input type="text" data-tooth="12" class="tooth-input"></div>
+                        <div class="tooth-cell"><span class="tooth-label">11</span><input type="text" data-tooth="11" class="tooth-input"></div>
+                        <div class="tooth-cell"><span class="tooth-label">21</span><input type="text" data-tooth="21" class="tooth-input"></div>
+                        <div class="tooth-cell"><span class="tooth-label">22</span><input type="text" data-tooth="22" class="tooth-input"></div>
+                        <div class="tooth-cell"><span class="tooth-label">23</span><input type="text" data-tooth="23" class="tooth-input"></div>
+                        <div class="tooth-cell"><span class="tooth-label">24</span><input type="text" data-tooth="24" class="tooth-input"></div>
+                        <div class="tooth-cell"><span class="tooth-label">25</span><input type="text" data-tooth="25" class="tooth-input"></div>
+                        <div class="tooth-cell"><span class="tooth-label">26</span><input type="text" data-tooth="26" class="tooth-input"></div>
+                        <div class="tooth-cell"><span class="tooth-label">27</span><input type="text" data-tooth="27" class="tooth-input"></div>
+                        <div class="tooth-cell"><span class="tooth-label">28</span><input type="text" data-tooth="28" class="tooth-input"></div>
 
-        <!-- Detalhes por status do dente -->
-        <div id="details-container" class="hidden mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
-            <!-- Card Dentes Permanentes Detalhes -->
-            <div class="bg-white p-6 rounded-lg shadow-md">
-                <h3 class="text-xl font-bold text-gray-800 mb-4">Dentes Permanentes (Status)</h3>
-                <ul id="permanent-details" class="space-y-2 text-gray-600">
-                    <!-- JS will populate this -->
-                </ul>
-            </div>
-            <!-- Card Dentes Decíduos Detalhes -->
-            <div class="bg-white p-6 rounded-lg shadow-md">
-                 <h3 class="text-xl font-bold text-gray-800 mb-4">Dentes Decíduos (Status)</h3>
-                <ul id="deciduous-details" class="space-y-2 text-gray-600">
-                    <!-- JS will populate this -->
-                </ul>
-            </div>
-        </div>
+                        <!-- Linha Superior Decíduos (55 a 65) -->
+                        <div class="tooth-cell"></div><div class="tooth-cell"></div><div class="tooth-cell"></div>
+                        <div class="tooth-cell"><span class="tooth-label">55</span><input type="text" data-tooth="55" class="tooth-input"></div>
+                        <div class="tooth-cell"><span class="tooth-label">54</span><input type="text" data-tooth="54" class="tooth-input"></div>
+                        <div class="tooth-cell"><span class="tooth-label">53</span><input type="text" data-tooth="53" class="tooth-input"></div>
+                        <div class="tooth-cell"><span class="tooth-label">52</span><input type="text" data-tooth="52" class="tooth-input"></div>
+                        <div class="tooth-cell"><span class="tooth-label">51</span><input type="text" data-tooth="51" class="tooth-input"></div>
+                        <div class="tooth-cell"><span class="tooth-label">61</span><input type="text" data-tooth="61" class="tooth-input"></div>
+                        <div class="tooth-cell"><span class="tooth-label">62</span><input type="text" data-tooth="62" class="tooth-input"></div>
+                        <div class="tooth-cell"><span class="tooth-label">63</span><input type="text" data-tooth="63" class="tooth-input"></div>
+                        <div class="tooth-cell"><span class="tooth-label">64</span><input type="text" data-tooth="64" class="tooth-input"></div>
+                        <div class="tooth-cell"><span class="tooth-label">65</span><input type="text" data-tooth="65" class="tooth-input"></div>
+                        <div class="tooth-cell"></div><div class="tooth-cell"></div><div class="tooth-cell"></div>
+                        
+                        <!-- Linha Inferior Decíduos (85 a 75) -->
+                        <div class="tooth-cell"></div><div class="tooth-cell"></div><div class="tooth-cell"></div>
+                        <div class="tooth-cell"><input type="text" data-tooth="85" class="tooth-input"><span class="tooth-label">85</span></div>
+                        <div class="tooth-cell"><input type="text" data-tooth="84" class="tooth-input"><span class="tooth-label">84</span></div>
+                        <div class="tooth-cell"><input type="text" data-tooth="83" class="tooth-input"><span class="tooth-label">83</span></div>
+                        <div class="tooth-cell"><input type="text" data-tooth="82" class="tooth-input"><span class="tooth-label">82</span></div>
+                        <div class="tooth-cell"><input type="text" data-tooth="81" class="tooth-input"><span class="tooth-label">81</span></div>
+                        <div class="tooth-cell"><input type="text" data-tooth="71" class="tooth-input"><span class="tooth-label">71</span></div>
+                        <div class="tooth-cell"><input type="text" data-tooth="72" class="tooth-input"><span class="tooth-label">72</span></div>
+                        <div class="tooth-cell"><input type="text" data-tooth="73" class="tooth-input"><span class="tooth-label">73</span></div>
+                        <div class="tooth-cell"><input type="text" data-tooth="74" class="tooth-input"><span class="tooth-label">74</span></div>
+                        <div class="tooth-cell"><input type="text" data-tooth="75" class="tooth-input"><span class="tooth-label">75</span></div>
+                        <div class="tooth-cell"></div><div class="tooth-cell"></div><div class="tooth-cell"></div>
 
+                        <!-- Linha Inferior (Dentes 48 a 38) -->
+                        <div class="tooth-cell"><input type="text" data-tooth="48" class="tooth-input"><span class="tooth-label">48</span></div>
+                        <div class="tooth-cell"><input type="text" data-tooth="47" class="tooth-input"><span class="tooth-label">47</span></div>
+                        <div class="tooth-cell"><input type="text" data-tooth="46" class="tooth-input"><span class="tooth-label">46</span></div>
+                        <div class="tooth-cell"><input type="text" data-tooth="45" class="tooth-input"><span class="tooth-label">45</span></div>
+                        <div class="tooth-cell"><input type="text" data-tooth="44" class="tooth-input"><span class="tooth-label">44</span></div>
+                        <div class="tooth-cell"><input type="text" data-tooth="43" class="tooth-input"><span class="tooth-label">43</span></div>
+                        <div class="tooth-cell"><input type="text" data-tooth="42" class="tooth-input"><span class="tooth-label">42</span></div>
+                        <div class="tooth-cell"><input type="text" data-tooth="41" class="tooth-input"><span class="tooth-label">41</span></div>
+                        <div class="tooth-cell"><input type="text" data-tooth="31" class="tooth-input"><span class="tooth-label">31</span></div>
+                        <div class="tooth-cell"><input type="text" data-tooth="32" class="tooth-input"><span class="tooth-label">32</span></div>
+                        <div class="tooth-cell"><input type="text" data-tooth="33" class="tooth-input"><span class="tooth-label">33</span></div>
+                        <div class="tooth-cell"><input type="text" data-tooth="34" class="tooth-input"><span class="tooth-label">34</span></div>
+                        <div class="tooth-cell"><input type="text" data-tooth="35" class="tooth-input"><span class="tooth-label">35</span></div>
+                        <div class="tooth-cell"><input type="text" data-tooth="36" class="tooth-input"><span class="tooth-label">36</span></div>
+                        <div class="tooth-cell"><input type="text" data-tooth="37" class="tooth-input"><span class="tooth-label">37</span></div>
+                        <div class="tooth-cell"><input type="text" data-tooth="38" class="tooth-input"><span class="tooth-label">38</span></div>
+                    </div>
+                </div>
+
+                <!-- Legenda -->
+                <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 text-base text-gray-600">
+                    <div>
+                        <h3 class="font-semibold text-gray-800 mb-2">Dentes Permanentes</h3>
+                        <ul class="space-y-1">
+                            <li><strong>0:</strong> Sadio</li><li><strong>1:</strong> Cariado</li><li><strong>2:</strong> Restaurado, com cárie</li><li><strong>3:</strong> Restaurado, sem cárie</li><li><strong>4:</strong> Extraído (cárie)</li><li><strong>5:</strong> Extraído (outra razão)</li><li><strong>6:</strong> Selante</li><li><strong>7:</strong> Ponte ou coroa</li><li><strong>8:</strong> Não erupcionado</li><li><strong>9:</strong> Excluído</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3 class="font-semibold text-gray-800 mb-2">Dentes Decíduos</h3>
+                         <ul class="space-y-1">
+                            <li><strong>A:</strong> Sadio</li><li><strong>B:</strong> Cariado</li><li><strong>C:</strong> Restaurado, com cárie</li><li><strong>D:</strong> Restaurado, sem cárie</li><li><strong>E:</strong> Extraído (cárie)</li><li><strong>F:</strong> Selante</li><li><strong>G:</strong> Ponte ou coroa</li>
+                        </ul>
+                    </div>
+                </div>
+            </fieldset>
+            
+            <!-- Seção de Higiene Bucal -->
+            <fieldset class="border-t border-gray-200 mt-8 pt-6">
+                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Higiene bucal</label>
+                        <div class="mt-2 flex items-center space-x-6">
+                            <label class="inline-flex items-center text-lg">
+                                <input type="radio" name="higiene" value="satisfatoria" class="h-5 w-5 text-indigo-600">
+                                <span class="ml-2">Satisfatória</span>
+                            </label>
+                            <label class="inline-flex items-center text-lg">
+                                <input type="radio" name="higiene" value="insatisfatoria" class="h-5 w-5 text-indigo-600">
+                                <span class="ml-2">Insatisfatória</span>
+                            </label>
+                        </div>
+                    </div>
+                     <div class="md:col-span-2">
+                        <label for="placa" class="block text-sm font-medium text-gray-700">Locais de acúmulo de placa visível</label>
+                        <textarea id="placa" name="placa" rows="3" class="mt-1 text-lg block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+                    </div>
+                </div>
+            </fieldset>
+
+            <!-- Botão de Envio -->
+            <div class="mt-8 pt-6 border-t border-gray-200 text-center">
+                <button type="submit" class="w-full md:w-auto bg-indigo-600 text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-transform transform hover:scale-105">
+                    Enviar Avaliação
+                </button>
+            </div>
+
+            <div id="success-message" class="hidden mt-6 p-4 bg-green-100 border border-green-400 text-green-700 rounded-lg text-center">
+                Avaliação salva com sucesso!
+            </div>
+
+        </form>
     </div>
+    
+    <!-- Modal para Cadastrar Escola -->
+    <div id="school-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center modal-overlay">
+        <div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md m-4">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Cadastrar Nova Escola</h2>
+            <form id="save-school-form">
+                <div class="mb-4">
+                    <label for="new-school-name" class="block text-sm font-medium text-gray-700">Nome da Escola</label>
+                    <input type="text" id="new-school-name" required class="mt-1 text-lg block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+                <div class="mb-6">
+                    <label for="new-health-unit" class="block text-sm font-medium text-gray-700">Unidade de Saúde de Referência</label>
+                    <select id="new-health-unit" required class="mt-1 text-lg block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                        <option value="">Selecione uma unidade</option>
+                        <option value="USF Vila Dutra">USF Vila Dutra</option>
+                        <option value="USF Santa Edwirges">USF Santa Edwirges</option>
+                        <option value="USF Nove de Julho">USF Nove de Julho</option>
+                        <option value="USF Tibiriça">USF Tibiriça</option>
+                        <option value="USF Vila São Paulo">USF Vila São Paulo</option>
+                        <option value="USF Nova Bauru">USF Nova Bauru</option>
+                        <option value="USF Pousada II">USF Pousada II</option>
+                        <option value="USF Vargem Limpa">USF Vargem Limpa</option>
+                        <option value="USF Jardi Godoy">USF Jardi Godoy</option>
+                    </select>
+                </div>
+                <div class="flex justify-end gap-4">
+                     <button type="button" id="close-school-modal-btn" class="bg-gray-200 text-gray-700 font-bold py-2 px-6 rounded-lg hover:bg-gray-300">Fechar</button>
+                    <button type="submit" class="bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg shadow-lg hover:bg-indigo-700">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Modal para Cadastrar Dentista -->
+    <div id="dentist-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center modal-overlay">
+        <div class="bg-white p-8 rounded-lg shadow-2xl w-full max-w-md m-4">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6">Cadastrar Novo Dentista</h2>
+            <form id="save-dentist-form">
+                <div class="mb-4">
+                    <label for="new-dentist-name" class="block text-sm font-medium text-gray-700">Nome do Dentista</label>
+                    <input type="text" id="new-dentist-name" required class="mt-1 text-lg block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                </div>
+                <div class="flex justify-end gap-4 mt-6">
+                     <button type="button" id="close-dentist-modal-btn" class="bg-gray-200 text-gray-700 font-bold py-2 px-6 rounded-lg hover:bg-gray-300">Fechar</button>
+                    <button type="submit" class="bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg shadow-lg hover:bg-indigo-700">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getFirestore, collection, getDocs, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
         import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
+        
         const firebaseConfig = {
-            apiKey: "AIzaSyCQ6-j_XnXirciqXe1-Me_fPErfWatRgpo",
-            authDomain: "cpod-f415e.firebaseapp.com",
-            projectId: "cpod-f415e",
-            storageBucket: "cpod-f415e.appspot.com",
-            messagingSenderId: "1074454483835",
-            appId: "1:1074454483835:web:43e95d040e885d293363de",
-            measurementId: "G-PM5E4T0ZYC"
+          apiKey: "AIzaSyCQ6-j_XnXirciqXe1-Me_fPErfWatRgpo",
+          authDomain: "cpod-f415e.firebaseapp.com",
+          projectId: "cpod-f415e",
+          storageBucket: "cpod-f415e.appspot.com",
+          messagingSenderId: "1074454483835",
+          appId: "1:1074454483835:web:43e95d040e885d293363de",
+          measurementId: "G-PM5E4T0ZYC"
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
 
-        const schoolSelect = document.getElementById('school-select');
-        const dentistSelect = document.getElementById('dentist-select');
-        const healthUnitSelect = document.getElementById('health-unit-select');
-        const filterBtn = document.getElementById('filter-btn');
-        const resultsContainer = document.getElementById('results-container');
-        const detailsContainer = document.getElementById('details-container');
+        // Sign in user anonymously
+        signInAnonymously(auth).catch((error) => {
+            console.error("Anonymous sign-in failed:", error);
+        });
 
-        const permanentStatusMap = {
-            '0': 'Sadio', '1': 'Cariado', '2': 'Restaurado, com cárie', '3': 'Restaurado, sem cárie',
-            '4': 'Extraído (cárie)', '5': 'Extraído (outra razão)', '6': 'Selante', '7': 'Ponte ou coroa',
-            '8': 'Não erupcionado', '9': 'Excluído'
-        };
-        const deciduousStatusMap = {
-            'A': 'Sadio', 'B': 'Cariado', 'C': 'Restaurado, com cárie', 'D': 'Restaurado, sem cárie',
-            'E': 'Extraído (cárie)', 'F': 'Selante', 'G': 'Ponte ou coroa'
-        };
+        const escolaSelect = document.getElementById('escola');
+        const dentistaSelect = document.getElementById('dentista');
 
-        async function loadFilters() {
+        const initialDentists = [
+            "AKIMI ADACHI", "BARBARA ARRABAL BARROS FERREIRA", "CAIO FARIA DE MORAES",
+            "DOUGLAS ARAUJO PEDROLONGO", "FRANCINE RODRIGUES DO NASCIMENTO", "GIOVANA SASSO JONAS",
+            "ISABELA MORENO AYRES", "ISRAEL MESSIAS GUARDIA", "JULIA FICHIO MIYAHARA",
+            "JULIA SANCHES DE SOUZA", "JULIA TELLES PASCON", "JULIANE PANDOLFI BUENO DE SOUZA ANTONIO",
+            "LIVIA MOZARDO CASTIGLIO", "LORRAYNE FARIAS DOS SANTOS", "LUZIA APARECIDA KIOKO FUGIYAMA",
+            "MATHEUS CAMARGO MARCIANO", "MAYARA MONTOVANI DE OLIVEIRA", "MONY KELLY DA SILVA BEZERRA",
+            "NAYANE MARIA DE MELO ALEXANDRINO", "PRISCILA CALIGARIS CAGI", "THAIS NAYRA MACHADO"
+        ];
+
+        async function loadDentists() {
             try {
-                await signInAnonymously(auth);
-                const [avaliacoesSnapshot, escolasSnapshot] = await Promise.all([
-                    getDocs(collection(db, "avaliacoes")),
-                    getDocs(collection(db, "escolas"))
-                ]);
+                const dentistsCollection = collection(db, "dentistas");
+                let querySnapshot = await getDocs(dentistsCollection);
 
-                const schools = new Set();
-                const dentists = new Set();
-                const healthUnits = new Map();
+                if (querySnapshot.empty) {
+                    const promises = initialDentists.map(name => addDoc(dentistsCollection, { nome: name }));
+                    await Promise.all(promises);
+                    querySnapshot = await getDocs(dentistsCollection);
+                }
 
-                avaliacoesSnapshot.forEach(doc => {
-                    const data = doc.data();
-                    if (data.escola) schools.add(data.escola);
-                    if (data.dentista) dentists.add(data.dentista);
-                });
-
-                escolasSnapshot.forEach(doc => {
-                    const data = doc.data();
-                    if(data.unidadeSaude) healthUnits.set(data.unidadeSaude, true);
-                });
-
-                // Populate School Select
-                schoolSelect.innerHTML = '<option value="">Consolidado Geral</option>';
-                [...schools].sort().forEach(school => {
-                    schoolSelect.innerHTML += `<option value="${school}">${school}</option>`;
+                const dentists = [];
+                querySnapshot.forEach((doc) => {
+                    dentists.push(doc.data().nome);
                 });
                 
-                // Populate Dentist Select
-                dentistSelect.innerHTML = '<option value="">Todos os Dentistas</option>';
-                [...dentists].sort().forEach(dentist => {
-                    dentistSelect.innerHTML += `<option value="${dentist}">${dentist}</option>`;
-                });
-                
-                // Populate Health Unit Select
-                healthUnitSelect.innerHTML = '<option value="">Todas as Unidades</option>';
-                [...healthUnits.keys()].sort().forEach(unit => {
-                    healthUnitSelect.innerHTML += `<option value="${unit}">${unit}</option>`;
+                dentistaSelect.innerHTML = '<option value="">Selecione um dentista</option>';
+                dentists.sort().forEach(name => {
+                    const option = document.createElement('option');
+                    option.value = name;
+                    option.textContent = name;
+                    dentistaSelect.appendChild(option);
                 });
 
             } catch (error) {
-                console.error("Error loading filters: ", error);
+                console.error("Erro ao carregar dentistas: ", error);
+                dentistaSelect.innerHTML = '<option value="">Erro ao carregar</option>';
             }
         }
 
-        async function calculateMetrics() {
-            const selectedSchool = schoolSelect.value;
-            const selectedDentist = dentistSelect.value;
-            const selectedHealthUnit = healthUnitSelect.value;
-            
-            let constraints = [];
-
-            if(selectedSchool) constraints.push(where("escola", "==", selectedSchool));
-            if(selectedDentist) constraints.push(where("dentista", "==", selectedDentist));
-            
-            // If a health unit is selected, we need to find which schools belong to it
-            if (selectedHealthUnit) {
-                 const schoolsInUnit = [];
-                 const schoolsQuery = query(collection(db, "escolas"), where("unidadeSaude", "==", selectedHealthUnit));
-                 const schoolsSnapshot = await getDocs(schoolsQuery);
-                 schoolsSnapshot.forEach(doc => schoolsInUnit.push(doc.data().nome));
-
-                 if(schoolsInUnit.length > 0){
-                    constraints.push(where("escola", "in", schoolsInUnit));
-                 } else { // No schools for this unit, so no results
-                    constraints.push(where("escola", "==", "")); // Impossible condition to return no results
-                 }
+        async function loadSchools() {
+            try {
+                const querySnapshot = await getDocs(collection(db, "escolas"));
+                escolaSelect.innerHTML = '<option value="">Selecione uma escola</option>';
+                querySnapshot.forEach((doc) => {
+                    const school = doc.data();
+                    const option = document.createElement('option');
+                    option.value = school.nome;
+                    option.textContent = school.nome;
+                    escolaSelect.appendChild(option);
+                });
+            } catch (error) {
+                console.error("Erro ao carregar escolas: ", error);
+                escolaSelect.innerHTML = '<option value="">Erro ao carregar</option>';
             }
-            
-            const q = query(collection(db, "avaliacoes"), ...constraints);
-            const querySnapshot = await getDocs(q);
+        }
 
-            let childCount = 0, permanentTeethCount = 0, deciduousTeethCount = 0, totalCPOD = 0, totalCEOD = 0;
-            const permanentCounts = Object.fromEntries(Object.keys(permanentStatusMap).map(key => [key, 0]));
-            const deciduousCounts = Object.fromEntries(Object.keys(deciduousStatusMap).map(key => [key, 0]));
-            
-            const cpodConditionCodes = ['1', '2', '4', '3'];
-            const ceodConditionCodes = ['B', 'C', 'E', 'D'];
+        document.addEventListener('DOMContentLoaded', function() {
+            loadSchools();
+            loadDentists();
 
-            querySnapshot.forEach(doc => {
-                childCount++;
-                const { odontograma = {} } = doc.data();
-                
-                let cpodIndividual = 0, ceodIndividual = 0;
+            const today = new Date();
+            const day = String(today.getDate()).padStart(2, '0');
+            const month = String(today.getMonth() + 1).padStart(2, '0');
+            const year = today.getFullYear();
+            document.getElementById('data').value = `${day}/${month}/${year}`;
 
-                for (const tooth in odontograma) {
-                    const state = odontograma[tooth].toUpperCase();
-                    const toothNum = parseInt(tooth, 10);
-
-                    if (permanentCounts.hasOwnProperty(state)) {
-                        permanentCounts[state]++;
-                    } else if (deciduousCounts.hasOwnProperty(state)) {
-                        deciduousCounts[state]++;
+            document.getElementById('nascimento').addEventListener('change', function() {
+                const birthDate = this.value;
+                if (birthDate) {
+                    const today = new Date();
+                    const birthDateObj = new Date(birthDate);
+                    let age = today.getFullYear() - birthDateObj.getFullYear();
+                    const monthDifference = today.getMonth() - birthDateObj.getMonth();
+                    if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birthDateObj.getDate())) {
+                        age--;
                     }
-                    
-                    if ((toothNum >= 11 && toothNum <= 48)) {
-                        permanentTeethCount++;
-                        if (cpodConditionCodes.includes(state)) cpodIndividual++;
-                    } else if ((toothNum >= 51 && toothNum <= 85)) {
-                        deciduousTeethCount++;
-                        if (ceodConditionCodes.includes(state)) ceodIndividual++;
-                    }
+                    document.getElementById('idade').value = age >= 0 ? age : '';
+                } else {
+                    document.getElementById('idade').value = '';
                 }
-                totalCPOD += cpodIndividual;
-                totalCEOD += ceodIndividual;
             });
-            
-            const avgCPOD = childCount > 0 ? (totalCPOD / childCount).toFixed(1) : '0.0';
-            const avgCEOD = childCount > 0 ? (totalCEOD / childCount).toFixed(1) : '0.0';
+        });
 
-            // Update UI
-            document.getElementById('evaluated-children').textContent = childCount;
-            document.getElementById('permanent-teeth').textContent = permanentTeethCount;
-            document.getElementById('deciduous-teeth').textContent = deciduousTeethCount;
-            document.getElementById('cpod-average').textContent = avgCPOD;
-            document.getElementById('ceod-average').textContent = avgCEOD;
-            
-            const permanentDetailsUl = document.getElementById('permanent-details');
-            permanentDetailsUl.innerHTML = '';
-            for(const code in permanentCounts){
-                 permanentDetailsUl.innerHTML += `<li class="flex justify-between"><span>${permanentStatusMap[code]} (${code})</span> <span class="font-bold">${permanentCounts[code]}</span></li>`;
+        // School Modal Logic
+        const schoolModal = document.getElementById('school-modal');
+        const addSchoolBtn = document.getElementById('add-school-btn');
+        const closeSchoolModalBtn = document.getElementById('close-school-modal-btn');
+        const saveSchoolForm = document.getElementById('save-school-form');
+
+        addSchoolBtn.addEventListener('click', () => schoolModal.classList.remove('hidden'));
+        closeSchoolModalBtn.addEventListener('click', () => schoolModal.classList.add('hidden'));
+
+        saveSchoolForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const schoolName = document.getElementById('new-school-name').value;
+            const healthUnit = document.getElementById('new-health-unit').value;
+
+            if (!schoolName || !healthUnit) return;
+
+            try {
+                await addDoc(collection(db, "escolas"), { nome: schoolName, unidadeSaude: healthUnit });
+                saveSchoolForm.reset();
+                schoolModal.classList.add('hidden');
+                await loadSchools();
+                escolaSelect.value = schoolName;
+            } catch (error) {
+                console.error("Erro ao salvar escola: ", error);
             }
+        });
 
-            const deciduousDetailsUl = document.getElementById('deciduous-details');
-            deciduousDetailsUl.innerHTML = '';
-            for(const code in deciduousCounts){
-                 deciduousDetailsUl.innerHTML += `<li class="flex justify-between"><span>${deciduousStatusMap[code]} (${code})</span> <span class="font-bold">${deciduousCounts[code]}</span></li>`;
+        // Dentist Modal Logic
+        const dentistModal = document.getElementById('dentist-modal');
+        const addDentistBtn = document.getElementById('add-dentist-btn');
+        const closeDentistModalBtn = document.getElementById('close-dentist-modal-btn');
+        const saveDentistForm = document.getElementById('save-dentist-form');
+
+        addDentistBtn.addEventListener('click', () => dentistModal.classList.remove('hidden'));
+        closeDentistModalBtn.addEventListener('click', () => dentistModal.classList.add('hidden'));
+
+        saveDentistForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const dentistName = document.getElementById('new-dentist-name').value;
+            if (!dentistName) return;
+
+            try {
+                await addDoc(collection(db, "dentistas"), { nome: dentistName });
+                saveDentistForm.reset();
+                dentistModal.classList.add('hidden');
+                await loadDentists();
+                dentistaSelect.value = dentistName;
+            } catch (error) {
+                console.error("Erro ao salvar dentista: ", error);
             }
+        });
 
-            resultsContainer.classList.remove('hidden');
-            detailsContainer.classList.remove('hidden');
-        }
 
-        // Event Listeners
-        document.addEventListener('DOMContentLoaded', loadFilters);
-        filterBtn.addEventListener('click', calculateMetrics);
+        // Main Form Submission Logic
+        const form = document.getElementById('evaluation-form');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
 
+            const odontogram = {};
+            const toothInputs = document.querySelectorAll('.tooth-input');
+            toothInputs.forEach(input => {
+                if(input.value) {
+                    odontogram[input.dataset.tooth] = input.value;
+                }
+            });
+
+            const evaluationData = {
+                dentista: form.dentista.value,
+                data: form.data.value,
+                nomeCrianca: form.nome.value,
+                dataNascimento: form.nascimento.value,
+                idade: form.idade.value,
+                genero: form.genero.value,
+                escola: form.escola.value,
+                higieneBucal: form.higiene.value,
+                locaisPlaca: form.placa.value,
+                odontograma: odontogram,
+                timestamp: new Date()
+            };
+
+            try {
+                await addDoc(collection(db, "avaliacoes"), evaluationData);
+                
+                const successMessage = document.getElementById('success-message');
+                successMessage.style.display = 'block';
+                successMessage.style.opacity = 1;
+                form.reset();
+
+                 const today = new Date();
+                 const day = String(today.getDate()).padStart(2, '0');
+                 const month = String(today.getMonth() + 1).padStart(2, '0');
+                 const year = today.getFullYear();
+                 document.getElementById('data').value = `${day}/${month}/${year}`;
+                 
+                 loadSchools();
+                 loadDentists();
+
+                setTimeout(() => {
+                    successMessage.style.opacity = 0;
+                    setTimeout(() => {
+                         successMessage.style.display = 'none';
+                    }, 500);
+                }, 3000);
+
+            } catch (error) {
+                console.error("Error adding document: ", error);
+            }
+        });
     </script>
 </body>
 </html>
